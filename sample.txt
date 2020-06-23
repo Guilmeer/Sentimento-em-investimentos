@@ -1,0 +1,2 @@
+http://g1.globo.com/dynamo/economia/rss2.xml
+http://noticias.r7.com/economia/feed.xml

@@ -1,0 +1,187 @@
+<Gerenciador>:
+    Menu:
+        name: 'menu'
+
+    Tweets:
+        name: 'tweets'
+
+    ListaRSS:
+        name: 'listaRSS'
+    
+    Noticias:
+        name: 'noticias'
+
+<Botao@ButtonBehavior+Label>:
+    on_press: self.color = (1, 0, 0, 1)
+    on_release: self.color = (1, 1, 1,1)
+    canvas.before:
+        Color:
+            rgba:0.153, 0.153, 0.153,1
+        Ellipse:
+            pos: self.pos
+            size:self.height-10, self.height
+        Ellipse:
+            pos:self.x+(self.width-10)-(self.height-10),self.y
+            size:self.height-10, self.height
+        Rectangle:
+            pos: self.x+self.height/2.0,self.y
+            size: (self.width-10)-(self.height-10), self.height
+<Menu>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding:100
+        spacing:50       
+        Botao:
+            text: 'Sentimento dos Tweets'
+            on_release: app.root.current = 'tweets'
+        Botao:
+            text: 'Notícias de economia'
+            on_release: app.root.current = 'listaRSS'
+        Botao:
+            text: 'Sair'
+            on_release: app.stop()
+
+<Tweets>:
+    BoxLayout:
+        orientation: 'vertical'
+        ActionBar:
+            ActionView:
+                ActionPrevious:
+                    title: 'Tweets'
+                    on_release: app.root.current = 'menu'
+                ActionButton:
+                    id: some
+                    text: "Sentimentos"
+                    on_release: root.open_popup()
+
+        ScrollView:
+            BoxLayout:
+                id:box
+                padding_top:20
+                padding_bottom:20
+                spacing:30
+                orientation: 'vertical'
+                size_hint_y: None
+                height: self.minimum_height
+
+        BoxLayout:
+            size_hint_y: None
+            height:60
+            TextInput:
+                id: pesquisa
+                hint_text: 'Informe o assunto que deseja pesquisar'
+            TextInput:
+                id: quantidade
+                hint_text: 'Informe a quantidade de tweets que deseja pesquisar'
+                input_filter:'int' 
+            Button: 
+                text:'Buscar!'
+                size_hint_x: None
+                width:60
+                on_release: root.Pesquisa()
+
+<LabelsBack@Label>:
+    canvas.before:
+        Color:
+            rgba: 0.153, 0.153, 0.153,1
+        Rectangle:
+            pos:self.x-10, self.y-10
+            size:self.width+20, self.height+20
+    
+
+<Tweet>:
+    size_hint_y: None
+    height: self.minimum_height
+    LabelsBack:
+        id: label
+        size_hint_y: None
+        font_size:14
+        text_size: self.width, None
+        height: self.texture_size[1]
+
+<PopupSent>:
+    ScrollView:
+        BoxLayout:
+            padding: 20
+            orientation: 'vertical'
+            Label:
+                id: sentimentLevel
+                text: "Sem informação"
+
+                font_size:15
+                text_size: self.width, None
+                height: self.texture_size[1]
+
+<PopupContent>:
+    BoxLayout:
+        orientation: "horizontal"
+        TextInput:
+            id:rss
+            hint_text: "informe o novo rss"
+        Button:
+            text: "Adicionar"
+            size_hint_x: None
+            on_release: app.root.get_screen('listaRSS').ClosePop()
+            on_release: app.root.get_screen('listaRSS').Reload()
+            on_release: root.salvarRSS()
+
+<ListaRSS>:
+    id: listarss
+    orientation: 'horizontal'
+    padding: 10
+    ScrollView:
+        BoxLayout:
+            id:box
+            padding:50
+            spacing:200
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+
+    Button:
+        size_hint: None, None
+        text:'Adicionar RSS'
+        on_release: root.OpenPopup()
+
+<noticias>:
+    Label:
+        id:label1
+    ScrollView:
+        BoxLayout:
+            id:boxnot
+            padding_top:20
+            padding_bottom:20
+            spacing:30
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+
+<Noticia>:
+    size_hint_y: None
+    height: self.minimum_height
+    LabelsBack:
+        id: label
+        size_hint_y: None
+        font_size:14
+        text_size: self.width, None
+        height: self.texture_size[1]
+
+<RSSLink>:
+    height: self.minimum_height
+    Label:
+        id: count
+        size_hint: None, None
+        font_size:20
+        text_size: self.width, None
+        height: self.texture_size[1]
+    Label:
+        id: label
+        size_hint_y: None
+        font_size:20
+        text_size: self.width, None
+        height: self.texture_size[1]
+    Button:
+        text:'Ver'
+        size_hint: None, None
+        on_release: app.root.get_screen('noticias').Preparar(self.parent.ids.label.text)
+        on_release: app.root.current = 'noticias'
